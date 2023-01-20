@@ -16,8 +16,12 @@ module WebApi
         :start_time,
       ].freeze
 
+      rescue_from Errors::InvalidStartTime, Errors::UserCreateOrUpdateError, Errors::CollegeNotFound, Errors::ExamNotFound do
+        head :bad_request
+      end
+
       def create
-        CreateEnrollment.new.call(permitted_params.to_h.symbolize_keys)
+        ::CreateEnrollmentService.new.call(permitted_params.to_h.symbolize_keys)
       end
 
       private
