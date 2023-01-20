@@ -1,6 +1,6 @@
 require 'rails_helper'
-RSpec.describe WebApi::V1::EnrollmentController, type: :controller do
 
+RSpec.describe WebApi::V1::EnrollmentController, type: :controller do
   let(:first_name) { 'Ricardo' }
   let(:last_name) { 'Costa' }
   let(:phone_number) { '999-9999' }
@@ -99,6 +99,51 @@ RSpec.describe WebApi::V1::EnrollmentController, type: :controller do
         post :create, params: params
 
         expect(response).to have_http_status :bad_request
+      end
+    end
+
+    context 'when the service returns an error' do
+      let(:enrollment_service) { instance_double(CreateEnrollmentService) }
+      allow(CreateEnrollmentService).to receive(:new).and_return(enrollment_service)
+
+      context 'when the college is not found' do
+        allow(enrollment_service).to receive(:call).and_raise(Errors::CollegeNotFound)
+
+        it 'returns a 400 code with an appropriate message' do
+          post :create, params: params
+
+          expect(response).to have_http_status :bad_request
+        end
+      end
+
+      context "when the exam doesn't exists or doesn't belong to the college " do
+        allow(enrollment_service).to receive(:call).and_raise(Errors::ExamNotFound)
+
+        it 'returns a 400 code with an appropriate message' do
+          post :create, params: params
+
+          expect(response).to have_http_status :bad_request
+        end
+      end
+
+      context 'when it fails to create or update user' do
+        allow(enrollment_service).to receive(:call).and_raise(Errors::UserCreateOrUpdateError)
+
+        it 'returns a 400 code with an appropriate message' do
+          post :create, params: params
+
+          expect(response).to have_http_status :bad_request
+        end
+      end
+
+      context "when the start time doesn't fall within an exam's time window" do
+        allow(enrollment_service).to receive(:call).and_raise(Errors::InvalidStartTime)
+
+        it 'returns a 400 code with an appropriate message' do
+          post :create, params: params
+
+          expect(response).to have_http_status :bad_request
+        end
       end
     end
   end
