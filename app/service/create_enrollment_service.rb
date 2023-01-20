@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # CreateEnrollment
-class CreateEnrollment
+class CreateEnrollmentService
   def call(params)
     college = get_college(params[:college_id])
     exam = get_exam(params[:exam_id], college)
