@@ -19,9 +19,16 @@ RSpec.describe WebApi::V1::EnrollmentController, type: :controller do
     }
   end
 
+  let(:enrollment_service) { instance_double(CreateEnrollmentService) }
+
+  before do
+    allow(CreateEnrollmentService).to receive(:new).and_return(enrollment_service)
+  end
+
   describe '#create' do
     context 'when all the parameters are correct' do
       it 'returns a 200 code response' do
+        allow(enrollment_service).to receive(:call)
         post :create, params: params
 
         expect(response).to have_http_status :no_content
@@ -103,13 +110,9 @@ RSpec.describe WebApi::V1::EnrollmentController, type: :controller do
     end
 
     context 'when the service returns an error' do
-      let(:enrollment_service) { instance_double(CreateEnrollmentService) }
-      allow(CreateEnrollmentService).to receive(:new).and_return(enrollment_service)
-
       context 'when the college is not found' do
-        allow(enrollment_service).to receive(:call).and_raise(Errors::CollegeNotFound)
-
         it 'returns a 400 code with an appropriate message' do
+          allow(enrollment_service).to receive(:call).and_raise(Errors::CollegeNotFound)
           post :create, params: params
 
           expect(response).to have_http_status :bad_request
@@ -117,9 +120,8 @@ RSpec.describe WebApi::V1::EnrollmentController, type: :controller do
       end
 
       context "when the exam doesn't exists or doesn't belong to the college " do
-        allow(enrollment_service).to receive(:call).and_raise(Errors::ExamNotFound)
-
         it 'returns a 400 code with an appropriate message' do
+          allow(enrollment_service).to receive(:call).and_raise(Errors::ExamNotFound)
           post :create, params: params
 
           expect(response).to have_http_status :bad_request
@@ -127,9 +129,8 @@ RSpec.describe WebApi::V1::EnrollmentController, type: :controller do
       end
 
       context 'when it fails to create or update user' do
-        allow(enrollment_service).to receive(:call).and_raise(Errors::UserCreateOrUpdateError)
-
         it 'returns a 400 code with an appropriate message' do
+          allow(enrollment_service).to receive(:call).and_raise(Errors::UserCreateOrUpdateError)
           post :create, params: params
 
           expect(response).to have_http_status :bad_request
@@ -137,9 +138,8 @@ RSpec.describe WebApi::V1::EnrollmentController, type: :controller do
       end
 
       context "when the start time doesn't fall within an exam's time window" do
-        allow(enrollment_service).to receive(:call).and_raise(Errors::InvalidStartTime)
-
         it 'returns a 400 code with an appropriate message' do
+          allow(enrollment_service).to receive(:call).and_raise(Errors::InvalidStartTime)
           post :create, params: params
 
           expect(response).to have_http_status :bad_request
