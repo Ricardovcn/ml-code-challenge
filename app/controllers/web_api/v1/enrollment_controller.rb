@@ -87,7 +87,7 @@ module WebApi
       end
 
       def datetime_valid?(string_date)
-        string_date.length == 19 && !!Date.strptime(string_date,'%Y-%m-%d %H:%M:%S')
+        string_date.length == 19 && !!DateTime.strptime(string_date,'%Y-%m-%d %H:%M:%S')
       rescue StandardError
         false
       end
