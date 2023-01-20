@@ -33,8 +33,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_19_234235) do
   end
 
   create_table "exam_windows", force: :cascade do |t|
-    t.datetime "start_date"
-    t.datetime "end_date"
+    t.datetime "start_time"
+    t.datetime "end_time"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -42,8 +42,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_19_234235) do
   create_table "exams", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "exam_window_id"
-    t.bigint "college_id"
+    t.bigint "exam_window_id", null: false
+    t.bigint "college_id", null: false
     t.index ["college_id"], name: "index_exams_on_college_id"
     t.index ["exam_window_id"], name: "index_exams_on_exam_window_id"
   end
