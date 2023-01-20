@@ -1,24 +1,32 @@
-# README
+# Meazure Learning Coding Challenge
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is the coding challenge of the Meazure Learning, one of the steps of the hiring process.
 
-Things you may want to cover:
+This test had a time limit and was made in a 4 hours time window.
 
-* Ruby version
+### Technologies
+ - Ruby Version 3.0.0
+ - Rails Version 7.0.x
+ - Rspec 6.0.1
 
-* System dependencies
+## How to test it?
 
-* Configuration
+- [ ] Run the application `rails s`
+- [ ] Feed the database with some examples.
+- [ ] Call the created endpoint by using testing apps, such as postman.
 
-* Database creation
+Endpoint:
 
-* Database initialization
+`POST <host>/web_api/v1/enrollment`
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Request body example:
+```json
+{
+    "first_name": "Ricardo",
+    "last_name": "Costa",
+    "phone_number": "999-3454",
+    "college_id": "1",
+    "exam_id": "2",
+    "start_time": "2014-11-19 20:30:45"
+}
+```
