@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe WebApi::V1::EnrollmentController, type: :controller do
+RSpec.describe WebApi::V1::UserExamController, type: :controller do
   let(:first_name) { 'Ricardo' }
   let(:last_name) { 'Costa' }
   let(:phone_number) { '999-9999' }

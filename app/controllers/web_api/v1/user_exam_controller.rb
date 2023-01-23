@@ -2,7 +2,7 @@
 
 module WebApi
   module V1
-    class EnrollmentController < ApplicationController
+    class UserExamController < ApplicationController
       before_action :validate_required_params, :validate_college_id,
                     :validate_exam_id, :validate_first_name, :validate_last_name,
                     :validate_start_time, :validate_phone_number
