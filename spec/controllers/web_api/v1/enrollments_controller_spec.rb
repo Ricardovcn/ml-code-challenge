@@ -19,10 +19,10 @@ RSpec.describe WebApi::V1::EnrollmentController, type: :controller do
     }
   end
 
-  let(:enrollment_service) { instance_double(CreateEnrollmentService) }
+  let(:enrollment_service) { instance_double(CreateUserExamService) }
 
   before do
-    allow(CreateEnrollmentService).to receive(:new).and_return(enrollment_service)
+    allow(CreateUserExamService).to receive(:new).and_return(enrollment_service)
   end
 
   describe '#create' do

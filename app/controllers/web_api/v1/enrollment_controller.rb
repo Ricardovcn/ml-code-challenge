@@ -21,7 +21,7 @@ module WebApi
       end
 
       def create
-        ::CreateEnrollmentService.new.call(permitted_params.to_h.symbolize_keys)
+        ::CreateUserExamService.new.call(permitted_params.to_h.symbolize_keys)
       end
 
       private
