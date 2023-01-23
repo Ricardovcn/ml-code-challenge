@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# CreateEnrollment
+# CreateUserExamService
 class CreateUserExamService
   def call(params)
     college = get_college(params[:college_id])
@@ -10,7 +10,7 @@ class CreateUserExamService
 
     verify_start_time(params[:start_time], exam.exam_window)
 
-    Enrollment.create!(
+    UserExam.create!(
       {
         start_date: params[:start_date],
         user_id: user.id,
