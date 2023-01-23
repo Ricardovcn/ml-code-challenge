@@ -7,6 +7,8 @@ module WebApi
                     :validate_exam_id, :validate_first_name, :validate_last_name,
                     :validate_start_time, :validate_phone_number
 
+      wrap_parameters false
+
       REQUIRED_PARAMS = [
         :first_name,
         :last_name,
