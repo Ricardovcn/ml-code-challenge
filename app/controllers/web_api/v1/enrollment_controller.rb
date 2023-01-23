@@ -33,7 +33,7 @@ module WebApi
       end
 
       def permitted_params
-        params.permit(
+        params.fetch(:enrollment, {}).permit(
           :first_name,
           :last_name,
           :phone_number,
