@@ -10,26 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_19_234235) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_23_170826) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "api_requests", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.string "phone_number"
+    t.integer "college_id"
+    t.integer "exam_id"
+    t.datetime "start_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "colleges", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "enrollments", force: :cascade do |t|
-    t.datetime "start_date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "user_id"
-    t.bigint "college_id"
-    t.bigint "exam_id"
-    t.index ["college_id"], name: "index_enrollments_on_college_id"
-    t.index ["exam_id"], name: "index_enrollments_on_exam_id"
-    t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
 
   create_table "exam_windows", force: :cascade do |t|
@@ -48,6 +47,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_19_234235) do
     t.index ["exam_window_id"], name: "index_exams_on_exam_window_id"
   end
 
+  create_table "user_exams", force: :cascade do |t|
+    t.datetime "start_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.bigint "college_id"
+    t.bigint "exam_id"
+    t.index ["college_id"], name: "index_user_exams_on_college_id"
+    t.index ["exam_id"], name: "index_user_exams_on_exam_id"
+    t.index ["user_id"], name: "index_user_exams_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -57,9 +68,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_19_234235) do
     t.index ["phone_number"], name: "index_users_on_phone_number", unique: true
   end
 
-  add_foreign_key "enrollments", "colleges"
-  add_foreign_key "enrollments", "exams"
-  add_foreign_key "enrollments", "users"
   add_foreign_key "exams", "colleges"
   add_foreign_key "exams", "exam_windows"
+  add_foreign_key "user_exams", "colleges"
+  add_foreign_key "user_exams", "exams"
+  add_foreign_key "user_exams", "users"
 end

@@ -2,10 +2,12 @@
 
 module WebApi
   module V1
-    class EnrollmentController < ApplicationController
-      before_action :validate_required_params, :validate_college_id,
+    class UserExamController < ApplicationController
+      before_action :log_requests, :validate_required_params, :validate_college_id,
                     :validate_exam_id, :validate_first_name, :validate_last_name,
                     :validate_start_time, :validate_phone_number
+
+      wrap_parameters false
 
       REQUIRED_PARAMS = [
         :first_name,
@@ -13,15 +15,17 @@ module WebApi
         :phone_number,
         :college_id,
         :exam_id,
-        :start_time,
+        :start_time
       ].freeze
 
-      rescue_from Errors::InvalidStartTime, Errors::UserCreateOrUpdateError, Errors::CollegeNotFound, Errors::ExamNotFound do
-        head :bad_request
+      rescue_from Errors::InvalidStartTime, Errors::UserCreateOrUpdateError,
+                  Errors::CollegeNotFound, Errors::ExamNotFound do |error|
+
+        bad_request_error(error.message)
       end
 
       def create
-        ::CreateEnrollmentService.new.call(permitted_params.to_h.symbolize_keys)
+        ::CreateUserExamService.new.call(permitted_params.to_h.symbolize_keys)
       end
 
       private
@@ -33,7 +37,7 @@ module WebApi
       end
 
       def permitted_params
-        params.permit(
+        params.fetch(:user_exam, {}).permit(
           :first_name,
           :last_name,
           :phone_number,
@@ -41,6 +45,10 @@ module WebApi
           :exam_id,
           :start_time
         )
+      end
+
+      def log_requests
+        logger.debug "\nApi Request: #{ApiRequest.new(permitted_params).attributes.inspect}"
       end
 
       def validate_college_id
@@ -87,6 +95,8 @@ module WebApi
       end
 
       def bad_request_error(message)
+        logger.debug "\nError: #{message}\n"
+
         render json: { error_message: message }, status: :bad_request
       end
 
