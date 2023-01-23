@@ -3,7 +3,7 @@
 module WebApi
   module V1
     class UserExamController < ApplicationController
-      before_action :validate_required_params, :validate_college_id,
+      before_action :log_requests, :validate_required_params, :validate_college_id,
                     :validate_exam_id, :validate_first_name, :validate_last_name,
                     :validate_start_time, :validate_phone_number
 
@@ -13,11 +13,12 @@ module WebApi
         :phone_number,
         :college_id,
         :exam_id,
-        :start_time,
+        :start_time
       ].freeze
 
       rescue_from Errors::InvalidStartTime, Errors::UserCreateOrUpdateError,
                   Errors::CollegeNotFound, Errors::ExamNotFound do |error|
+
         bad_request_error(error.message)
       end
 
@@ -42,6 +43,10 @@ module WebApi
           :exam_id,
           :start_time
         )
+      end
+
+      def log_requests
+        logger.debug "\nApi Request: #{ApiRequest.new(permitted_params).attributes.inspect}"
       end
 
       def validate_college_id
@@ -88,6 +93,8 @@ module WebApi
       end
 
       def bad_request_error(message)
+        logger.debug "\nError: #{message}\n"
+
         render json: { error_message: message }, status: :bad_request
       end
 
