@@ -16,8 +16,9 @@ module WebApi
         :start_time,
       ].freeze
 
-      rescue_from Errors::InvalidStartTime, Errors::UserCreateOrUpdateError, Errors::CollegeNotFound, Errors::ExamNotFound do
-        head :bad_request
+      rescue_from Errors::InvalidStartTime, Errors::UserCreateOrUpdateError,
+                  Errors::CollegeNotFound, Errors::ExamNotFound do |error|
+        bad_request_error(error.message)
       end
 
       def create
